@@ -1,6 +1,7 @@
 import numpy as np
 import copy
 import math
+import matplotlib.pyplot as plt
 
 
 #########################################################################
@@ -19,6 +20,10 @@ def compute_cost(x, y, w, b):
         total_cost (float): The cost of using w,b as the parameters for linear regression
                to fit the data points in x and y
     """
+    m = x.shape[0]                  # número de ejemplos
+    y_hat = w * x + b               # predicciones del modelo
+    errors = y_hat - y              # vector de errores
+    total_cost = (errors @ errors) / (2 * m)   # equivalente a 0.5 * np.mean(errors**2)
 
     return total_cost
 
@@ -67,3 +72,29 @@ def gradient_descent(x, y, w_in, b_in, cost_function, gradient_function, alpha, 
     """
 
     return w, b, J_history
+
+def graficar_datos(x, y):
+        # Crear gráfico
+    plt.figure(figsize=(10,8))
+    plt.scatter(x, y, marker='x', c='red')
+
+    plt.xlabel("Population of City in 10,000s")
+    plt.ylabel("Profit in $10,000")
+    plt.title("Profits vs. Population per city")
+
+    plt.show()
+
+def main():
+    # Cargar datos
+    data = np.loadtxt("C:/Users/pablo/OneDrive - Universidad Complutense de Madrid (UCM)/Uni/3º/2º/AA/workspace/Practicas/Practica_1/data/ex1data1.txt", delimiter=",")
+    
+    x = data[:, 0]   # población
+    y = data[:, 1]   # ganancias
+
+    graficar_datos(x, y)
+
+
+
+
+if __name__ == "__main__":
+    main()
