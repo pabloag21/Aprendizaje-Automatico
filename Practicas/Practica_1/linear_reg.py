@@ -42,6 +42,24 @@ def compute_gradient(x, y, w, b):
       dj_dw (scalar): The gradient of the cost w.r.t. the parameters w
       dj_db (scalar): The gradient of the cost w.r.t. the parameter b     
      """
+    
+    # Según lo que tengo entendido, w y b son los valores de la recta y = wx +b
+    # Entonces lo que tengo que hacer es calcular dw db que indicarán hacia donde
+    # orientar la recta, ya que hay que aproximarlos lo maximo posible a 0.
+    # Ahora solo me queda averiguar como hacer esto matematicamnete
+
+    # Numero de ejemplos
+    m = x.shape[0]
+
+    # Predicciones
+    y_hat = w * x + b
+
+    # Errores (predicciones - valores_reales)
+    errors = y_hat - y
+
+    # Derivadas
+    dj_db = np.sum(errors) / m
+    dj_dw = np.sum(errors * x) / m
 
     return dj_dw, dj_db
 
@@ -71,11 +89,62 @@ def gradient_descent(x, y, w_in, b_in, cost_function, gradient_function, alpha, 
           primarily for graphing later
     """
 
+    #Creo el historial que sera un array relleno de ceros, e inicializo w y b
+    w = w_in
+    b = b_in
+    J_history = np.zeros(num_iters)
+
+def compute_gradient(x, y, w, b):
+    """
+    Computes the gradient for linear regression 
+    Returns dj_dw, dj_db
+    """
+    m = x.shape[0]
+    # predicción
+    y_hat = w * x + b
+    # errores
+    errors = y_hat - y
+    # gradientes (vectorizado)
+    dj_db = np.sum(errors) / m
+    dj_dw = np.sum(errors * x) / m
+    return dj_dw, dj_db
+
+
+def gradient_descent(x, y, w_in, b_in, cost_function, gradient_function, alpha, num_iters):
+    """
+    Performs batch gradient descent to learn w and b.
+
+    Args:
+      x, y: (ndarray) datos
+      w_in, b_in: (float) valores iniciales
+      cost_function: función que devuelve J(w,b)
+      gradient_function: función que devuelve (dj_dw, dj_db)
+      alpha: learning rate
+      num_iters: número de iteraciones
+
+    Returns:
+      w, b, J_history
+    """
+    w = w_in
+    b = b_in
+    J_history = np.zeros(num_iters)
+
+    for i in range(num_iters):
+        dj_dw, dj_db = gradient_function(x, y, w, b)
+
+        # actualización simultánea
+        w = w - alpha * dj_dw
+        b = b - alpha * dj_db
+
+        # guardar coste para seguimiento
+        J_history[i] = cost_function(x, y, w, b)
+
     return w, b, J_history
 
+# Crear gráfico de los datos iniciales
 def graficar_datos(x, y):
-        # Crear gráfico
-    plt.figure(figsize=(10,8))
+
+    plt.figure(figsize=(6,4))
     plt.scatter(x, y, marker='x', c='red')
 
     plt.xlabel("Population of City in 10,000s")
@@ -84,14 +153,48 @@ def graficar_datos(x, y):
 
     plt.show()
 
+#Crear grafico de los datos y la recta de regresion
+def graficar_recta(x, y, w, b):
+    
+    plt.figure(figsize=(6,4))
+    plt.scatter(x, y, marker='x', c='red', label='Datos')
+
+    x_vals = np.array([x.min(), x.max()])
+    y_vals = w * x_vals + b
+    plt.plot(x_vals, y_vals, '-', label='Ajuste lineal')
+    plt.xlabel("Population of City in 10,000s")
+    plt.ylabel("Profit in $10,000")
+    plt.title("Profits vs. Population per city (fit)")
+    plt.legend()
+
+    plt.show()
+
 def main():
     # Cargar datos
     data = np.loadtxt("C:/Users/pablo/OneDrive - Universidad Complutense de Madrid (UCM)/Uni/3º/2º/AA/workspace/Practicas/Practica_1/data/ex1data1.txt", delimiter=",")
-    
-    x = data[:, 0]   # población
-    y = data[:, 1]   # ganancias
+    x = data[:, 0]
+    y = data[:, 1]
 
     graficar_datos(x, y)
+
+    # inicializar parámetros
+    w_init = 0.0
+    b_init = 0.0
+    alpha = 0.01
+    num_iters = 1500
+
+    w, b, J_hist = gradient_descent(x, y, w_init, b_init, compute_cost, compute_gradient, alpha, num_iters)
+
+    print(f"Parámetros aprendidos: w = {w:.8f}, b = {b:.8f}")
+    print(f"Coste final: {J_hist[-1]:.6f}")
+
+    # Dibujar recta de ajuste
+    graficar_recta(x, y, w, b)
+
+    # Ejemplo de predicción: población 35k y 70k -> x = 3.5 y 7.0
+    for pop in [3.5, 7.0]:
+        pred = w * pop + b
+        print(f"Predicción para población={pop*10000:.0f}: {pred*10000:.2f} $ (en unidades del dataset: {pred:.4f})")
 
 
 
