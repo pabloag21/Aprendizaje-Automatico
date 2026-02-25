@@ -1,4 +1,5 @@
 import numpy as np
+import linear_reg as lr
 
 def compute_cost_test(target):
     # print("Using X with shape (4, 1)")
@@ -65,3 +66,7 @@ def compute_gradient_test(target):
     print("\033[92mAll tests passed!")
     
 
+if __name__ == "__main__":
+    # correr tests
+    compute_cost_test(lr.compute_cost)
+    compute_gradient_test(lr.compute_gradient)

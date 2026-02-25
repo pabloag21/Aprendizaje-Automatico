@@ -2,6 +2,7 @@ import numpy as np
 import copy
 import math
 import matplotlib.pyplot as plt
+import os 
 
 
 #########################################################################
@@ -63,53 +64,6 @@ def compute_gradient(x, y, w, b):
 
     return dj_dw, dj_db
 
-
-#########################################################################
-# gradient descent
-#
-def gradient_descent(x, y, w_in, b_in, cost_function, gradient_function, alpha, num_iters):
-    """
-    Performs batch gradient descent to learn theta. Updates theta by taking 
-    num_iters gradient steps with learning rate alpha
-
-    Args:
-      x :    (ndarray): Shape (m,)
-      y :    (ndarray): Shape (m,)
-      w_in, b_in : (scalar) Initial values of parameters of the model
-      cost_function: function to compute cost
-      gradient_function: function to compute the gradient
-      alpha : (float) Learning rate
-      num_iters : (int) number of iterations to run gradient descent
-    Returns
-      w : (ndarray): Shape (1,) Updated values of parameters of the model after
-          running gradient descent
-      b : (scalar) Updated value of parameter of the model after
-          running gradient descent
-      J_history : (ndarray): Shape (num_iters,) J at each iteration,
-          primarily for graphing later
-    """
-
-    #Creo el historial que sera un array relleno de ceros, e inicializo w y b
-    w = w_in
-    b = b_in
-    J_history = np.zeros(num_iters)
-
-def compute_gradient(x, y, w, b):
-    """
-    Computes the gradient for linear regression 
-    Returns dj_dw, dj_db
-    """
-    m = x.shape[0]
-    # predicción
-    y_hat = w * x + b
-    # errores
-    errors = y_hat - y
-    # gradientes (vectorizado)
-    dj_db = np.sum(errors) / m
-    dj_dw = np.sum(errors * x) / m
-    return dj_dw, dj_db
-
-
 def gradient_descent(x, y, w_in, b_in, cost_function, gradient_function, alpha, num_iters):
     """
     Performs batch gradient descent to learn w and b.
@@ -151,7 +105,7 @@ def graficar_datos(x, y):
     plt.ylabel("Profit in $10,000")
     plt.title("Profits vs. Population per city")
 
-    plt.show()
+    plt.show(block=False)
 
 #Crear grafico de los datos y la recta de regresion
 def graficar_recta(x, y, w, b):
@@ -167,7 +121,7 @@ def graficar_recta(x, y, w, b):
     plt.title("Profits vs. Population per city (fit)")
     plt.legend()
 
-    plt.show()
+    plt.show(block=False)
 
 def main():
     # Cargar datos
@@ -192,12 +146,17 @@ def main():
     graficar_recta(x, y, w, b)
 
     # Ejemplo de predicción: población 35k y 70k -> x = 3.5 y 7.0
-    for pop in [3.5, 7.0]:
-        pred = w * pop + b
-        print(f"Predicción para población={pop*10000:.0f}: {pred*10000:.2f} $ (en unidades del dataset: {pred:.4f})")
+    opt = input("Quieres Hacer una predicion: (s/n):")
 
+    while opt == 's':
+        pred = float(input("Introduce la poblacion:"))
+        print(f"El beneficio será de {pred*w + b:.2f}")
+        opt = input("Desea seguir consultando el modelo: ")
+        os.system('cls')
 
-
+    
+    print("Cerrando el programa...")
+    
 
 if __name__ == "__main__":
     main()

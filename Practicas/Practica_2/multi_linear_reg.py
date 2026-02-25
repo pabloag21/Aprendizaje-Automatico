@@ -22,8 +22,6 @@ def zscore_normalize_features(X):
 
     return (X_norm, mu, sigma)
 
-
-
 def compute_cost(X, y, w, b):
     """
     compute cost
