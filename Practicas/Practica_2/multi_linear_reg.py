@@ -37,6 +37,8 @@ def compute_cost(X, y, w, b):
     Returns
       cost (scalar)    : cost
     """
+
+    # Tamaño de la muestra
     m = X.shape[0]
     cost = 0.0
 
@@ -145,6 +147,7 @@ def main():
   os.system("cls")
 
   graficar_datos(data)
+
 
 if __name__ == "__main__":
     main()
