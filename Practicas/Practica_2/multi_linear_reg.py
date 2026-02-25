@@ -1,7 +1,11 @@
 import numpy as np
 import copy
 import math
+import matplotlib.pyplot as plt
+import os
+import time
 
+# *** FALTA VECTORIZAR ***
 
 def zscore_normalize_features(X):
     """
@@ -115,8 +119,32 @@ def gradient_descent(X, y, w_in, b_in, cost_function,
             print(f"Iteration {i:9d}, Cost: {cst:0.5e}")
     return w, b
 
+def graficar_datos(data):
+
+  X_train = data[:, :4]
+  y_train = data[:, 4]
+
+  X_features = ['size(sqft)', 'bedrooms', 'floors', 'age']
+
+  fig, ax = plt.subplots(1, 4, figsize=(25, 5), sharey=True)
+
+  for i in range(len(ax)):
+    ax[i].scatter(X_train[:, i], y_train)
+    ax[i].set_xlabel(X_features[i])
+
+  ax[0].set_ylabel("Price (1000's)")
+
+  plt.show()
 
 def main():
-    print("HOLA")
 
-main()
+  os.system("cls")
+  print("ARRANCANDO EL PROGRAMA...")
+  data = np.loadtxt("C:/Users/pablo/OneDrive - Universidad Complutense de Madrid (UCM)/Uni/3º/2º/AA/workspace/Practicas/Practica_2/data/houses.txt", delimiter=',', skiprows=1)
+  time.sleep(2)
+  os.system("cls")
+
+  graficar_datos(data)
+
+if __name__ == "__main__":
+    main()
