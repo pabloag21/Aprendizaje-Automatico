@@ -106,12 +106,12 @@ def predict(theta1, theta2, X):
 
 
     a1 = np.hstack([np.ones((m, 1)), X]) # Ahora ya tiene el bias
-    z1 = a1.dot(theta1.T)
+    z1 = a1 @ theta1.T
 
     a2 = sigmoid(z1) # Pasarlo por el sigmoide
 
     a2 = np.hstack([np.ones((m, 1)), a2])  # De nuevo el BIAS
-    z2 = a2.dot(theta2.T)
+    z2 = a2 @ theta2.T
 
     a3 = sigmoid(z2)
     
@@ -132,12 +132,24 @@ def cargar_datos():
 
     return X, y, theta1, theta2 
 
+
+
 def main():
     X, y, theta1, theta2 = cargar_datos()
 
-    ut.displayData(X)
+    # Mostrar algunas imágenes
+    #ut.displayData(X)
 
+    # Obtener predicciones
     p = predict(theta1, theta2, X)
+
+    # Calcular precisión
+    accuracy = np.mean(p == y) * 100
+    print(f"Precisión del modelo: {accuracy:.2f}%")
+
+    # Mostrar algunos ejemplos de predicción
+    for i in range(10):
+        print(f"Ejemplo {i}: Predicción = {p[i]}, Etiqueta real = {y[i]}")
     
 
 if __name__ == "__main__":
